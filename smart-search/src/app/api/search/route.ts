@@ -21,9 +21,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout 
 }
 
 // 调用Google搜索API
-async function callGoogleSearchAPI(query: string) {
-  const apiKey = process.env.GOOGLE_API_KEY
-  const searchEngineId = process.env.GOOGLE_SEARCH_ENGINE_ID
+async function callGoogleSearchAPI(query: string, apiKey: string, searchEngineId: string) {
   const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=${encodeURIComponent(query)}`
   
   try {
@@ -41,8 +39,7 @@ async function callGoogleSearchAPI(query: string) {
 }
 
 // 调用GLM处理结果
-async function callGLMAPI(searchResults: SearchResult[], query: string) {
-  const apiKey = process.env.ZHIPUAI_API_KEY
+async function callGLMAPI(searchResults: SearchResult[], query: string, apiKey: string) {
   const url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
   
   // 前3个核心结果，后4个快速结果
@@ -162,6 +159,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '查询参数不能为空' }, { status: 400 })
     }
 
+    // 验证环境变量
+    const googleApiKey = process.env.GOOGLE_API_KEY
+    const searchEngineId = process.env.GOOGLE_SEARCH_ENGINE_ID
+    const glmApiKey = process.env.ZHIPUAI_API_KEY
+
+    if (!googleApiKey || !searchEngineId || !glmApiKey) {
+      console.error('Missing required environment variables:', {
+        hasGoogleApiKey: !!googleApiKey,
+        hasSearchEngineId: !!searchEngineId,
+        hasGlmApiKey: !!glmApiKey
+      })
+      return NextResponse.json({ error: '服务配置错误，请联系管理员' }, { status: 500 })
+    }
+
     const startTime = Date.now()
 
     // 第一步：关键词过滤
@@ -182,7 +193,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 第二步：Google搜索
-    const searchResults = await callGoogleSearchAPI(filteredQuery)
+    const searchResults = await callGoogleSearchAPI(filteredQuery, googleApiKey, searchEngineId)
     
     if (!searchResults.items || searchResults.items.length === 0) {
       return NextResponse.json({
@@ -199,7 +210,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 第三步：GLM处理结果
-    const processedResults = await callGLMAPI(searchResults.items, filteredQuery)
+    const processedResults = await callGLMAPI(searchResults.items, filteredQuery, glmApiKey)
 
     const processingTime = `${((Date.now() - startTime) / 1000).toFixed(1)}s`
 

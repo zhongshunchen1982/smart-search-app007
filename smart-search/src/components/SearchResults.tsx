@@ -43,7 +43,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
           核心结果
         </h2>
         <div className="space-y-6">
-          {results.coreResults.map((result, index) => (
+          {(results.coreResults || []).map((result, index) => (
             <div key={index} className="animate-slideUp" style={{ animationDelay: `${100 + index * 100}ms` }}>
               <ResultCard result={result} isCore={true} />
             </div>
@@ -62,7 +62,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
             快速浏览
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {results.quickResults.map((result, index) => (
+            {(results.quickResults || []).map((result, index) => (
               <div key={index} className="animate-slideUp" style={{ animationDelay: `${200 + index * 50}ms` }}>
                 <ResultCard result={result} isCore={false} />
               </div>
@@ -134,7 +134,7 @@ function ResultCard({ result, isCore }: { result: SearchResult; isCore: boolean 
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
           </svg>
-          {new URL(result.link).hostname}
+          {getHostname(result.link)}
         </a>
         {result.relevanceScore && (
           <div className="flex items-center gap-2 bg-gray-50 px-2 py-1 rounded">
@@ -153,4 +153,13 @@ function ResultCard({ result, isCore }: { result: SearchResult; isCore: boolean 
       </div>
     </div>
   )
+}
+
+// 安全获取 URL hostname 的函数
+function getHostname(url: string): string {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url
+  }
 }
