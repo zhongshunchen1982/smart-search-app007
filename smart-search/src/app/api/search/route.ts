@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { filterKeywords } from '@/lib/keywordFilter'
+import { SearchResult, SearchResponse } from '@/types/search'
 
 // 带超时的fetch
-async function fetchWithTimeout(url: string, options: any, timeout = 10000) {
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000) {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
   
@@ -40,7 +41,7 @@ async function callGoogleSearchAPI(query: string) {
 }
 
 // 调用GLM处理结果
-async function callGLMAPI(searchResults: any[], query: string) {
+async function callGLMAPI(searchResults: SearchResult[], query: string) {
   const apiKey = process.env.ZHIPUAI_API_KEY
   const url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
   
@@ -114,7 +115,7 @@ ${quickResults.map((item, index) => `${index + 4}. ${item.title}\n   ${item.snip
           cleanContent = cleanContent.replace(/```\n?/, '').replace(/\n?```$/, '')
         }
         return JSON.parse(cleanContent)
-      } catch (parseError) {
+      } catch {
         // 如果解析失败，返回原始结果
         return {
           directAnswer: null,
@@ -134,7 +135,7 @@ ${quickResults.map((item, index) => `${index + 4}. ${item.title}\n   ${item.snip
     }
     
     throw new Error('GLM返回格式错误')
-  } catch (error) {
+  } catch {
     // 如果GLM调用失败，返回原始结果
     return {
       directAnswer: null,

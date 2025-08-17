@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { SearchResponse } from '@/types/search'
 
 export default function TestPage() {
-  const [results, setResults] = useState<any>(null)
+  const [results, setResults] = useState<SearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [testQuery, setTestQuery] = useState('')
 
@@ -127,7 +128,7 @@ export default function TestPage() {
                 <p><strong>总耗时:</strong> {results.testInfo.totalTime}</p>
                 <p><strong>搜索意图:</strong> {results.searchMetadata?.intent}</p>
                 {results.searchMetadata?.originalQuery !== results.searchMetadata?.optimizedQuery && (
-                  <p><strong>查询优化:</strong> "{results.searchMetadata.originalQuery}" → "{results.searchMetadata.optimizedQuery}"</p>
+                  <p><strong>查询优化:</strong> &ldquo;{results.searchMetadata.originalQuery}&rdquo; → &ldquo;{results.searchMetadata.optimizedQuery}&rdquo;</p>
                 )}
               </div>
             )}
@@ -141,7 +142,7 @@ export default function TestPage() {
             
             <div className="space-y-4">
               <h3 className="font-medium">核心结果 ({results.coreResults?.length || 0})</h3>
-              {results.coreResults?.slice(0, 3).map((result: any, index: number) => (
+              {results.coreResults?.slice(0, 3).map((result, index: number) => (
                 <div key={index} className="border rounded p-3">
                   <h4 className="font-medium text-blue-600">{result.title}</h4>
                   <p className="text-sm text-gray-600 mt-1">{result.summary || result.snippet}</p>
