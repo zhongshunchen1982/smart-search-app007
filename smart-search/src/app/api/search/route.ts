@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { filterKeywords } from '@/lib/keywordFilter'
-import { SearchResult, SearchResponse } from '@/types/search'
+import { SearchResult } from '@/types/search'
 
 // 带超时的fetch
 async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000) {
