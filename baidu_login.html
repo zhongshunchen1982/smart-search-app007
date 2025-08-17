@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百度一下，你就知道</title>
+    <style>
+        /* 页面基本样式 */
+        body, html {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* 防止滚动 */
+        }
+
+        a {
+            color: #262626;
+            text-decoration: none;
+        }
+
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* 顶部导航 */
+        .header {
+            padding: 15px 24px;
+            height: 24px;
+            line-height: 24px;
+        }
+
+        .header .top-nav {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .header .top-nav .time-display {
+            position: absolute;
+            left: 0;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .header .top-nav .nav-link {
+            padding: 4px 8px;
+            border-radius: 3px;
+            margin: 0 5px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            display: inline-block;
+            color: #262626;
+            background-color: transparent;
+        }
+
+        .header .top-nav .nav-link:hover {
+            background-color: #4e71f2;
+            color: white;
+        }
+
+        .header .top-nav .nav-separator {
+            height: 16px;
+            border-left: 1px solid #e0e0e0;
+            margin: 0 10px;
+        }
+
+        /* 主要内容区域 */
+        #main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 200px;
+        }
+
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            width: 270px;
+            height: 129px;
+            border: none;
+        }
+
+        .doodle-icon {
+            position: absolute;
+            top: -10px;
+            right: -40px;
+            color: #ffc107;
+        }
+
+        .doodle-icon svg {
+            width: 50px;
+            height: 50px;
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .search-form-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-bar-container {
+            display: flex;
+            width: 640px;
+        }
+
+        .search-input-wrapper {
+            flex-grow: 1;
+            position: relative;
+            border: 2px solid #c4c7ce;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+            height: 44px;
+            background: #fff;
+        }
+        .search-input-wrapper:hover, .search-input-wrapper:focus-within {
+            border-color: #a7aab0;
+        }
+        .search-input-wrapper:focus-within {
+            border-color: #315efb;
+        }
+
+        .search-input {
+            width: calc(100% - 50px);
+            height: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            background: transparent;
+        }
+
+        .camera-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg t="1627979239397" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2459" width="24" height="24"><path d="M736 800a32 32 0 0 1-32-32V256a32 32 0 0 1 32-32h128a32 32 0 0 1 32 32v512a32 32 0 0 1-32 32H736zM256 800a32 32 0 0 1-32-32V256a32 32 0 0 1 32-32h128a32 32 0 0 1 32 32v512a32 32 0 0 1-32 32H256zM480 928a32 32 0 0 1-32-32V128a32 32 0 0 1 32-32h64a32 32 0 0 1 32 32v768a32 32 0 0 1-32 32h-64z" fill="%23315EFB"></path></svg>');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        .search-btn {
+            width: 112px;
+            height: 48px;
+            font-size: 17px;
+            color: #fff;
+            background-color: #315efb;
+            border: none;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: #2c53e8;
+        }
+
+        .news-section {
+            width: 640px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .news-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px 20px;
+        }
+
+        .news-section li {
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .news-section a {
+            color: #333;
+            font-weight: 400;
+        }
+
+        .news-section a:hover {
+            color: #315efb;
+            text-decoration: underline;
+        }
+
+        /* 底部 */
+        #footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #ebebeb;
+        }
+        #footer a {
+            color: #999;
+            margin: 0 15px;
+        }
+        #footer a:hover {
+            color: #666;
+        }
+        #footer .copyright {
+            color: #666;
+        }
+
+        /* 弹窗样式 */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            text-align: center;
+        }
+        #popup p {
+            font-size: 16px;
+            margin: 0 0 20px;
+            color: #333;
+        }
+        #popup button {
+            background-color: #315efb;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #popup button:hover {
+            background-color: #2c53e8;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <div class="top-nav">
+                <span id="real-time-clock" class="time-display"></span>
+                <a href="#" class="nav-link">新闻</a>
+                <a href="#" class="nav-link">hao123</a>
+                <a href="#" class="nav-link">地图</a>
+                <a href="#" class="nav-link">贴吧</a>
+                <a href="#" class="nav-link">视频</a>
+                <a href="#" class="nav-link">图片</a>
+                <a href="#" class="nav-link">网盘</a>
+                <a href="#" class="nav-link">更多</a>
+                <span class="nav-separator"></span>
+                <a href="#" class="nav-link">设置</a>
+                <a href="#" class="nav-link">登录</a>
+            </div>
+        </div>
+
+        <div id="main-content">
+            <div class="logo-container">
+                <img src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png" alt="百度logo" class="logo-img">
+                <span class="doodle-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                        <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+                    </svg>
+                </span>
+            </div>
+            <div class="search-form-wrapper">
+                <div class="search-bar-container">
+                    <form id="searchForm" style="width: 100%; display: flex;">
+                        <div class="search-input-wrapper">
+                            <input type="text" class="search-input" id="searchInput" maxlength="100" autocomplete="off">
+                            <span class="camera-icon"></span>
+                        </div>
+                        <input type="submit" class="search-btn" value="百度一下">
+                    </form>
+                </div>
+                <div class="news-section">
+                    <ul>
+                        <li><a href="#" title="香港特区政府强烈反对美国人权报告中的不实内容">香港特区政府强烈反对美国人权报告</a></li>
+                        <li><a href="#" title="江西省委常委会传达学习习近平总书记重要讲话精神">江西省委传达学习习近平重要讲话</a></li>
+                        <li><a href="#" title="成都世运会无人机竞速项目被誉为“空中F1”">成都世运会无人机竞速被誉为空中F1</a></li>
+                        <li><a href="#" title="全国多地举办夜间体育赛事带动夜间消费">多地举办夜间体育赛事带动夜间消费</a></li>
+                        <li><a href="#" title="刘涛为妈祖庆生，一级警督护航">刘涛为妈祖庆生，一级警督护航</a></li>
+                        <li><a href="#" title="孙俪新剧收视第一，但口碑两极分化">孙俪新剧收视第一口碑两极分化</a></li>
+                        <li><a href="#" title="四川绵竹啤酒节桁架倒塌致2死3重伤">四川绵竹啤酒节桁架倒塌致2死3重伤</a></li>
+                        <li><a href="#" title="多地快递行业协会发布“反内卷”声明">多地快递行业协会发布“反内卷”声明</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <a href="#">关于百度</a>
+            <a href="#">About Baidu</a>
+            <a href="#">使用协议</a>
+            <a href="#">隐私政策</a>
+            <a href="#">意见反馈</a>
+            <span class="copyright">©2025 Baidu</span>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div id="overlay"></div>
+    <div id="popup">
+        <p>呵呵呵你被忽悠了，去直接搜索资源并创作吧！</p>
+        <button onclick="closePopup()">确定</button>
+    </div>
+
+    <script>
+        // 处理表单提交
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // 阻止默认提交行为
+            showPopup(); // 显示弹窗
+        });
+
+        // 显示弹窗
+        function showPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        // 关闭弹窗
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        // 实时时间显示
+        const clockElement = document.getElementById('real-time-clock');
+        function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份是从0开始的
+            const day = String(now.getDate()).padStart(2, '0');
+            const week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][now.getDay()];
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            clockElement.textContent = `${year}年${month}月${day}日 ${week} ${hours}:${minutes}:${seconds}`;
+        }
+        updateTime(); // 立即执行一次以避免初始空白
+        setInterval(updateTime, 1000); // 每秒更新
+    </script>
+</body>
+</html>
