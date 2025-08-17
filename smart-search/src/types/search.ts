@@ -8,6 +8,12 @@ export interface SearchResult {
   relevanceScore?: number
 }
 
+// 测试信息类型
+export interface TestInfo {
+  query: string
+  totalTime: string
+}
+
 // 搜索响应类型定义
 export interface SearchResponse {
   directAnswer?: string
@@ -21,4 +27,5 @@ export interface SearchResponse {
     originalQuery?: string
     optimizedQuery?: string
   }
+  testInfo?: TestInfo
 }

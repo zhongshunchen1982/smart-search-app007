@@ -127,7 +127,8 @@ export default function TestPage() {
                 <p><strong>查询:</strong> {results.testInfo.query}</p>
                 <p><strong>总耗时:</strong> {results.testInfo.totalTime}</p>
                 <p><strong>搜索意图:</strong> {results.searchMetadata?.intent}</p>
-                {results.searchMetadata?.originalQuery !== results.searchMetadata?.optimizedQuery && (
+                {results.searchMetadata?.originalQuery && results.searchMetadata?.optimizedQuery && 
+                  results.searchMetadata.originalQuery !== results.searchMetadata.optimizedQuery && (
                   <p><strong>查询优化:</strong> &ldquo;{results.searchMetadata.originalQuery}&rdquo; → &ldquo;{results.searchMetadata.optimizedQuery}&rdquo;</p>
                 )}
               </div>
