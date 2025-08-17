@@ -8,7 +8,11 @@
       "Bash(timeout:*)",
       "Bash(npm test)",
       "Bash(npm run)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(dir:*)",
+      "Bash(npm run build:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
