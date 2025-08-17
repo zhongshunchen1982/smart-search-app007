@@ -1,27 +1,9 @@
 'use client'
 
-interface SearchResult {
-  title: string
-  link: string
-  snippet: string
-  summary?: string
-  category?: string
-  relevanceScore?: number
-}
+import { SearchResult, SearchResponse } from '@/types/search'
 
 interface SearchResultsProps {
-  results: {
-    directAnswer?: string
-    coreResults: SearchResult[]
-    quickResults: SearchResult[]
-    searchMetadata?: {
-      intent: string
-      processingTime: string
-      totalResults: number
-      originalQuery?: string
-      optimizedQuery?: string
-    }
-  }
+  results: SearchResponse
 }
 
 export default function SearchResults({ results }: SearchResultsProps) {
@@ -98,7 +80,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
             {results.searchMetadata.originalQuery !== results.searchMetadata.optimizedQuery && (
               <div className="bg-blue-50 inline-block px-3 py-1 rounded-full text-blue-700">
                 <span className="font-medium">已优化查询：</span>
-                "{results.searchMetadata.originalQuery}" → "{results.searchMetadata.optimizedQuery}"
+                &ldquo;{results.searchMetadata.originalQuery}&rdquo; → &ldquo;{results.searchMetadata.optimizedQuery}&rdquo;
               </div>
             )}
             <p className="flex items-center justify-center gap-2">

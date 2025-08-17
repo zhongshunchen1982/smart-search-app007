@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { SearchResponse } from '@/types/search'
 
 export default function FullTestPage() {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<any>(null)
+  const [results, setResults] = useState<SearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [currentDate, setCurrentDate] = useState('')
@@ -132,7 +133,7 @@ export default function FullTestPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">核心结果</h2>
               <div className="grid gap-4">
-                {results.coreResults?.map((item: any, index: number) => (
+                {results.coreResults?.map((item, index: number) => (
                   <div key={index} className="bg-white rounded-lg shadow-md p-6 hover-lift">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-xl font-semibold text-blue-600">
@@ -160,7 +161,7 @@ export default function FullTestPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">快速浏览</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {results.quickResults?.map((item: any, index: number) => (
+                {results.quickResults?.map((item, index: number) => (
                   <div key={index} className="bg-white rounded-lg shadow p-4 hover-lift">
                     <h3 className="font-semibold mb-2">
                       <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">

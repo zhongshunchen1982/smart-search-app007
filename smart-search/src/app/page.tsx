@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react'
 import SearchResults from '@/components/SearchResults'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { SearchResponse } from '@/types/search'
 
 export default function Home() {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<any>(null)
+  const [results, setResults] = useState<SearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [showResults, setShowResults] = useState(false)
   const [currentDate, setCurrentDate] = useState('')
